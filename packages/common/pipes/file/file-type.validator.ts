@@ -1,3 +1,4 @@
+import { pathToFileURL } from 'url';
 import { Logger } from '../../services/logger.service';
 import { FileValidatorContext } from './file-validator-context.interface';
 import { FileValidator } from './file-validator.interface';
@@ -125,7 +126,9 @@ export class FileTypeValidator extends FileValidator<
     try {
       let fileTypePath: string;
       try {
-        fileTypePath = require.resolve('file-type');
+        const resolvedPath = require.resolve('file-type');
+        // Convert absolute path to file:// URL for cross-platform ESM compatibility
+        fileTypePath = pathToFileURL(resolvedPath).href;
       } catch {
         fileTypePath = 'file-type';
       }
